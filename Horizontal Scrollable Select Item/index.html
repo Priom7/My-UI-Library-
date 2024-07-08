@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scrollable Text Options</title>
+    <!-- <link rel="stylesheet" href="styles.css" /> -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f2f5;
+        margin: 0;
+      }
+
+      .container {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        width: 80%;
+        position: relative;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+      }
+
+      .icon {
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0 15px;
+        user-select: none;
+        color: #007bff;
+      }
+
+      .scrollable {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        width: calc(100% - 60px);
+        padding: 10px;
+      }
+
+      .scrollable::-webkit-scrollbar {
+        display: none;
+      }
+
+      .option {
+        width: 200px;
+        height: 200px;
+        padding: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+        border-radius: 5px;
+        margin: 0 10px;
+        flex: 0 0 auto;
+        background-color: #f8f9fa;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .option.selected {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .card p {
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        overflow-y: auto;
+        max-height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="icon left" id="left-icon">&#9664;</div>
+      <div class="scrollable">
+        <div class="option card">
+          <p>
+            Note: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Molestiae officiis laborum ex ullam repudiandae, beatae aut
+            consectetur magnam quis deleniti architecto mollitia quae nihil.
+            Illum cupiditate excepturi vero quidem aliquid. Lorem ipsum dolor
+            sit amet consectetur adipisicing elit. Molestiae officiis laborum ex
+            ullam repudiandae, beatae aut consectetur magnam quis deleniti
+            architecto mollitia quae nihil. Illum cupiditate excepturi vero
+            quidem aliquid.
+          </p>
+        </div>
+        <div class="option card">
+          <p>
+            Note: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Molestiae officiis laborum ex ullam repudiandae, beatae aut
+            consectetur magnam quis deleniti architecto mollitia quae nihil.
+            Illum cupiditate excepturi vero quidem aliquid. Lorem ipsum dolor
+            sit amet consectetur adipisicing elit. Molestiae officiis laborum ex
+            ullam repudiandae, beatae aut consectetur magnam quis deleniti
+            architecto mollitia quae nihil. Illum cupiditate excepturi vero
+            quidem aliquid.
+          </p>
+        </div>
+        <div class="option card">
+          <p>
+            Note: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Molestiae officiis laborum ex ullam repudiandae, beatae aut
+            consectetur magnam quis deleniti architecto mollitia quae nihil.
+            Illum cupiditate excepturi vero quidem aliquid. Lorem ipsum dolor
+            sit amet consectetur adipisicing elit. Molestiae officiis laborum ex
+            ullam repudiandae, beatae aut consectetur magnam quis deleniti
+            architecto mollitia quae nihil. Illum cupiditate excepturi vero
+            quidem aliquid.
+          </p>
+        </div>
+        <div class="option card">
+          <p>
+            Note: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Molestiae officiis laborum ex ullam repudiandae, beatae aut
+            consectetur magnam quis deleniti architecto mollitia quae nihil.
+            Illum cupiditate excepturi vero quidem aliquid. Lorem ipsum dolor
+            sit amet consectetur adipisicing elit. Molestiae officiis laborum ex
+            ullam repudiandae, beatae aut consectetur magnam quis deleniti
+            architecto mollitia quae nihil. Illum cupiditate excepturi vero
+            quidem aliquid.
+          </p>
+        </div>
+        <div class="option card">
+          <p>
+            Note: Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Molestiae officiis laborum ex ullam repudiandae, beatae aut
+            consectetur magnam quis deleniti architecto mollitia quae nihil.
+            Illum cupiditate excepturi vero quidem aliquid. Lorem ipsum dolor
+            sit amet consectetur adipisicing elit. Molestiae officiis laborum ex
+            ullam repudiandae, beatae aut consectetur magnam quis deleniti
+            architecto mollitia quae nihil. Illum cupiditate excepturi vero
+            quidem aliquid.
+          </p>
+        </div>
+        <!-- Add more options as needed -->
+      </div>
+      <div class="icon right" id="right-icon">&#9654;</div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const scrollable = document.querySelector(".scrollable");
+    const leftIcon = document.getElementById("left-icon");
+    const rightIcon = document.getElementById("right-icon");
+    const options = document.querySelectorAll(".option");
+
+    leftIcon.addEventListener("click", () => {
+      scrollable.scrollBy({ left: -100, behavior: "smooth" });
+    });
+
+    rightIcon.addEventListener("click", () => {
+      scrollable.scrollBy({ left: 100, behavior: "smooth" });
+    });
+
+    options.forEach((option) => {
+      option.addEventListener("click", () => {
+        options.forEach((opt) => opt.classList.remove("selected"));
+        option.classList.add("selected");
+      });
+    });
+  });
+</script>

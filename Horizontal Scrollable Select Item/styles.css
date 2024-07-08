@@ -1,0 +1,46 @@
+.card {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    width: 80%;
+    position: relative;
+}
+
+.icon {
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0 10px;
+    user-select: none;
+}
+
+.scrollable {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    width: calc(100% - 80px);
+}
+
+.option {
+    padding: 10px 20px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.option.selected {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+.scrollable::-webkit-scrollbar {
+    display: none;
+}
