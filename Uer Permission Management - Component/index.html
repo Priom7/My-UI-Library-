@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filter Record Example</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+
+      .card-header {
+        background-color: #007bff;
+        color: #ffffff;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        font-weight: bold;
+        border-radius: 4px 4px 0 0;
+      }
+
+      .card-body {
+        padding: 10px;
+      }
+
+      .form-check {
+        margin-bottom: 10px;
+      }
+
+      .filter-wraper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .filter-title {
+        background-color: #007bff;
+        color: #ffffff;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+
+      .filter-title a {
+        color: #ffffff;
+        text-decoration: none;
+      }
+
+      .filter-title span {
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+      }
+
+      .module-card {
+        margin-top: 20px;
+      }
+
+      .form-control {
+        border-radius: 4px;
+      }
+
+      .form-check-label {
+        font-size: 14px;
+      }
+
+      .glyphicon {
+        font-family: "Glyphicons Halflings";
+      }
+    </style>
+  </head>
+  <body>
+    <div id="filter_record" class="filter-wraper">
+      <div class="filter-title">
+        <div class="filter">
+          <span id="filter_record_arrow" style="color: #ffffff">&#x25B2;</span>
+          <a href="javascript:void(0);" onclick="toggle_filter_record();"
+            ><b>Filter Record</b></a
+          >
+        </div>
+      </div>
+
+      <form method="POST" id="frmFilter" name="frmFilter">
+        <div class="form-group row">
+          <label for="group_name" class="col-sm-2 col-form-label"
+            >Group Name</label
+          >
+          <div class="col-sm-8">
+            <input
+              class="form-control"
+              id="group_name"
+              name="group_name"
+              type="text"
+              placeholder="Enter group name"
+            />
+          </div>
+          <div class="col-sm-2">
+            <button
+              type="button"
+              class="btn btn-primary"
+              onClick="fetchUserModules();"
+              style="height: 35px"
+            >
+              <i class="fas fa-search"></i> Fetch Modules
+            </button>
+          </div>
+        </div>
+
+        <div id="user_modules_container" style="display: none">
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <input
+                type="text"
+                class="form-control"
+                id="module_search"
+                placeholder="Search Modules"
+                onkeyup="filterModules()"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="global_check_all"
+                  onclick="toggleGlobalPermissions(this)"
+                />
+                <label class="form-check-label" for="global_check_all"
+                  >Check All / Uncheck All</label
+                >
+              </div>
+            </div>
+          </div>
+          <div id="user_modules_list" class="row">
+            <!-- User modules with permissions will be dynamically inserted here -->
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <button
+                type="button"
+                class="btn btn-primary"
+                onClick="addGroup();"
+                style="height: 35px"
+              >
+                <i class="fas fa-plus"></i> Add Group
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <small class="form-text text-muted">Group List</small>
+              <div id="group_list" class="row">
+                <!-- Display the list of groups with sub lists of items here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function toggle_filter_record() {
+        var arrow = document.getElementById("filter_record_arrow");
+        var frmFilter = document.getElementById("frmFilter");
+        var display = frmFilter.style.display === "none" ? "block" : "none";
+        arrow.innerHTML = display === "block" ? "&#x25BC;" : "&#x25B2;";
+        frmFilter.style.display = display;
+      }
+
+      function fetchUserModules() {
+        var groupName = document.getElementById("group_name").value;
+        if (!groupName) {
+          alert("Please enter a group name.");
+          return;
+        }
+
+        document.getElementById("user_modules_container").style.display =
+          "block";
+
+        var userModules = ["Module 1", "Module 2", "Module 3"]; // Dummy data
+        var userModulesList = document.getElementById("user_modules_list");
+        userModulesList.innerHTML = "";
+
+        userModules.forEach(function (module) {
+          var moduleCard = document.createElement("div");
+          moduleCard.classList.add("col-md-6", "module-card");
+          moduleCard.setAttribute("data-module-name", module.toLowerCase());
+
+          var card = document.createElement("div");
+          card.classList.add("card");
+          card.style.marginTop = "20px";
+
+          var cardHeader = document.createElement("div");
+          cardHeader.classList.add("card-header");
+          cardHeader.textContent = module;
+
+          var cardBody = document.createElement("div");
+          cardBody.classList.add("card-body");
+
+          var allCheckbox = document.createElement("div");
+          allCheckbox.classList.add("form-check");
+          allCheckbox.innerHTML = `<input type='checkbox' class='form-check-input module-all' onclick='toggleModulePermissions(this)'>
+                                         <label class='form-check-label'>All</label>`;
+          cardBody.appendChild(allCheckbox);
+
+          var permissions = ["Create", "Read", "Update", "Delete"];
+          permissions.forEach(function (permission) {
+            var checkbox = document.createElement("div");
+            checkbox.classList.add("form-check", "col-md-3");
+            checkbox.innerHTML = `<input type='checkbox' class='form-check-input' name='${module}_permissions[]' value='${permission}' onclick='checkModuleAll(this)'>
+                                         <label class='form-check-label'>${permission}</label>`;
+            cardBody.appendChild(checkbox);
+          });
+          cardBody.style.display = "flex";
+          cardBody.style.flexWrap = "wrap";
+          cardBody.style.justifyContent = "space-between";
+
+          card.appendChild(cardHeader);
+          card.appendChild(cardBody);
+          moduleCard.appendChild(card);
+          userModulesList.appendChild(moduleCard);
+        });
+      }
+
+      function toggleGlobalPermissions(checkbox) {
+        var checkboxes = document.querySelectorAll(
+          "#user_modules_list input[type=checkbox]"
+        );
+        checkboxes.forEach(function (cb) {
+          cb.checked = checkbox.checked;
+        });
+      }
+
+      function toggleModulePermissions(checkbox) {
+        var checkboxes = checkbox.parentElement.parentElement.querySelectorAll(
+          "input[type=checkbox]"
+        );
+        checkboxes.forEach(function (cb) {
+          cb.checked = checkbox.checked;
+        });
+        if (!checkbox.checked) {
+          document.getElementById("global_check_all").checked = false;
+        }
+      }
+
+      function checkModuleAll(checkbox) {
+        var moduleCard = checkbox.closest(".card-body");
+        var allCheckbox = moduleCard.querySelector(".module-all");
+        var allChecked = true;
+        var moduleCheckboxes = moduleCard.querySelectorAll(
+          "input[type=checkbox]:not(.module-all)"
+        );
+        moduleCheckboxes.forEach(function (cb) {
+          if (!cb.checked) {
+            allChecked = false;
+          }
+        });
+        allCheckbox.checked = allChecked;
+
+        if (!checkbox.checked) {
+          document.getElementById("global_check_all").checked = false;
+        } else {
+          var globalAllChecked = true;
+          var allModuleCheckboxes = document.querySelectorAll(
+            "#user_modules_list input[type=checkbox]:not(.module-all)"
+          );
+          allModuleCheckboxes.forEach(function (cb) {
+            if (!cb.checked) {
+              globalAllChecked = false;
+            }
+          });
+          document.getElementById("global_check_all").checked =
+            globalAllChecked;
+        }
+      }
+
+      function filterModules() {
+        var input, filter, modules, moduleCard, i;
+        input = document.getElementById("module_search");
+        filter = input.value.toLowerCase();
+        modules = document.getElementsByClassName("module-card");
+
+        for (i = 0; i < modules.length; i++) {
+          moduleCard = modules[i];
+          if (
+            moduleCard.getAttribute("data-module-name").indexOf(filter) > -1
+          ) {
+            moduleCard.style.display = "";
+          } else {
+            moduleCard.style.display = "none";
+          }
+        }
+      }
+
+      function addGroup() {
+        var groupName = document.getElementById("group_name").value;
+        var userModulesList = document
+          .getElementById("user_modules_list")
+          .getElementsByClassName("card");
+
+        if (!groupName) {
+          alert("Please enter a group name.");
+          return;
+        }
+
+        var groupList = document.getElementById("group_list");
+        var groupItem = document.createElement("div");
+        groupItem.classList.add("col-sm-12");
+
+        var card = document.createElement("div");
+        card.classList.add("card");
+
+        var cardHeader = document.createElement("div");
+        cardHeader.classList.add("card-header");
+        cardHeader.innerHTML = `<b>Group Name:</b> ${groupName}`;
+
+        var cardBody = document.createElement("div");
+        cardBody.classList.add("card-body");
+
+        for (var i = 0; i < userModulesList.length; i++) {
+          var module =
+            userModulesList[i].getElementsByClassName("card-header")[0]
+              .textContent;
+          var checkboxes = userModulesList[i].getElementsByTagName("input");
+
+          var selectedPermissions = [];
+          for (var j = 0; j < checkboxes.length; j++) {
+            if (checkboxes[j].checked && checkboxes[j].value) {
+              selectedPermissions.push(checkboxes[j].value);
+            }
+          }
+
+          if (selectedPermissions.length > 0) {
+            var subListItem = document.createElement("p");
+            subListItem.innerHTML = `<b>${module}:</b> ${selectedPermissions.join(
+              ", "
+            )}`;
+            cardBody.appendChild(subListItem);
+          }
+        }
+
+        card.appendChild(cardHeader);
+        card.appendChild(cardBody);
+        groupItem.appendChild(card);
+        groupList.appendChild(groupItem);
+
+        document.getElementById("group_name").value = "";
+        var checkboxes = document.querySelectorAll(
+          "#user_modules_list input[type=checkbox]"
+        );
+        checkboxes.forEach(function (checkbox) {
+          checkbox.checked = false;
+        });
+      }
+    </script>
+  </body>
+</html>
